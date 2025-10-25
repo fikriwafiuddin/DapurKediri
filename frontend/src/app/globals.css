@@ -1,0 +1,235 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+
+  --background-image-hero: var(--gradient-hero);
+  --background-image-warm: var(--gradient-warm);
+  --background-image-spice: var(--gradient-spice);
+
+  --color-warm: var(--shadow-warm);
+  --color-elegant: var(--shadow-elegant);
+
+  --patter-opacity: var(--pattern-opacity);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* Base colors - warm cream and dark brown inspired by Indonesian earth tones */
+  --background: oklch(97.934% 0.00275 84.3);
+  --foreground: oklch(27.642% 0.03106 55.519);
+
+  /* Card colors - warm neutral with subtle warmth */
+  --card: oklch(98.559% 0.0016 66.223);
+  --card-foreground: oklch(27.642% 0.03106 55.519);
+
+  /* Popover colors */
+  --popover: oklch(98.559% 0.0016 66.223);
+  --popover-foreground: oklch(27.642% 0.03106 55.519);
+
+  /* Primary - rich terracotta inspired by Indonesian clay and spices */
+  --primary: oklch(56.234% 0.15315 38.1);
+  --primary-foreground: oklch(97.934% 0.00275 84.3);
+
+  /* Secondary - warm golden yellow inspired by turmeric and Indonesian gold */
+  --secondary: oklch(93.49% 0.06548 92.129);
+  --secondary-foreground: oklch(27.642% 0.03106 55.519);
+
+  /* Muted colors - soft earth tones */
+  --muted: oklch(94.453% 0.00901 78.136);
+  --muted-foreground: oklch(56.274% 0.04439 56.753);
+
+  /* Accent - deep warm brown inspired by Indonesian wood and coffee */
+  --accent: oklch(38.522% 0.0594 55.92);
+  --accent-foreground: oklch(97.934% 0.00275 84.3);
+
+  /* Success color - inspired by Indonesian green leaves */
+  --success: oklch(56.005% 0.14106 148.096);
+  --success-foreground: oklch(97.934% 0.00275 84.3);
+
+  /* Destructive colors */
+  --destructive: oklch(60.07% 0.2083 26.148);
+  --destructive-foreground: oklch(97.934% 0.00275 84.3);
+
+  /* Border and input colors */
+  --border: oklch(91.806% 0.01769 81.279);
+  --input: oklch(91.806% 0.01769 81.279);
+  --ring: oklch(56.234% 0.15315 38.1);
+
+  /* Indonesian-inspired gradients */
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(56.234% 0.15315 38.1),
+    oklch(50.791% 0.1159 51.624)
+  );
+  --gradient-warm: linear-gradient(
+    90deg,
+    oklch(93.49% 0.06548 92.129),
+    oklch(86.71% 0.08898 84.118)
+  );
+  --gradient-spice: linear-gradient(
+    180deg,
+    oklch(56.234% 0.15315 38.1),
+    oklch(47.588% 0.1586 25.59)
+  );
+
+  /* Shadows with warm tones */
+  --shadow-warm: 0 4px 20px oklch(56.234% 0.15315 38.1 / 0.15);
+  --shadow-elegant: 0 8px 30px oklch(38.522% 0.0594 55.92 / 0.12);
+
+  /* Pattern overlay for Indonesian batik effect */
+  --pattern-opacity: 0.03;
+
+  --radius: 0.5rem;
+
+  --sidebar: oklch(98.511% 0.00011 271.152);
+
+  --sidebar-foreground: oklch(37.032% 0.01192 285.76);
+
+  --sidebar-primary: oklch(21.033% 0.00588 285.832);
+
+  --sidebar-primary-foreground: oklch(98.511% 0.00011 271.152);
+
+  --sidebar-accent: oklch(96.744% 0.00143 285.225);
+
+  --sidebar-accent-foreground: oklch(21.033% 0.00588 285.832);
+
+  --sidebar-border: oklch(92.758% 0.00592 264.656);
+
+  --sidebar-ring: oklch(62.31% 0.1881 259.83);
+}
+
+.dark {
+  /* Base colors - dark Indonesian theme */
+  --background: oklch(19.634% 0.01887 54.996);
+  --foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Card colors */
+  --card: oklch(21.925% 0.02075 56.342);
+  --card-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Popover colors */
+  --popover: oklch(21.925% 0.02075 56.342);
+  --popover-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Primary - terracotta in dark mode */
+  --primary: oklch(64.792% 0.17104 38.365);
+  --primary-foreground: oklch(19.634% 0.01887 54.996);
+
+  /* Secondary - warm dark gold */
+  --secondary: oklch(38.622% 0.0661 89.455);
+  --secondary-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Muted colors */
+  --muted: oklch(27.642% 0.03106 55.519);
+  --muted-foreground: oklch(72.816% 0.02439 61.007);
+
+  /* Accent - warm brown */
+  --accent: oklch(31.013% 0.04 56.166);
+  --accent-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Success color */
+  --success: oklch(67.418% 0.17326 147.72);
+  --success-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Destructive colors */
+  --destructive: oklch(60.07% 0.2083 26.148);
+  --destructive-foreground: oklch(96.486% 0.00443 77.99);
+
+  /* Border and input */
+  --border: oklch(30.786% 0.03583 55.309);
+  --input: oklch(30.786% 0.03583 55.309);
+  --ring: oklch(64.792% 0.17104 38.365);
+
+  /* Dark mode gradients */
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(64.792% 0.17104 38.365),
+    oklch(60.698% 0.14192 51.176)
+  );
+  --gradient-warm: linear-gradient(
+    90deg,
+    oklch(44.991% 0.07873 90.352),
+    oklch(48.843% 0.08218 82.238)
+  );
+  --gradient-spice: linear-gradient(
+    180deg,
+    oklch(64.792% 0.17104 38.365),
+    oklch(56.444% 0.20089 26.543)
+  );
+
+  /* Dark shadows */
+  --shadow-warm: 0 4px 20px oklch(64.792% 0.17104 38.365 / 0.25);
+  --shadow-elegant: 0 8px 30px oklch(27.734% 0.03879 55.356 / 0.3);
+  --sidebar-background: oklch(21.033% 0.00588 285.832);
+  --sidebar-foreground: oklch(96.744% 0.00143 285.225);
+  --sidebar-primary: oklch(48.821% 0.21724 264.392);
+  --sidebar-primary-foreground: oklch(100% 0.00011 271.152);
+  --sidebar-accent: oklch(27.394% 0.00551 285.955);
+  --sidebar-accent-foreground: oklch(96.744% 0.00143 285.225);
+  --sidebar-border: oklch(27.394% 0.00551 285.955);
+  --sidebar-ring: oklch(62.31% 0.1881 259.83);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
