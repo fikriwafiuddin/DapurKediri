@@ -5,6 +5,8 @@ import { ShoppingCart, Menu, X, Phone, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import useCartStore from "@/hooks/useCartStore"
+import useHydratedStore from "@/hooks/useHydratedStore"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -19,10 +21,10 @@ const Header = () => {
   ]
 
   const isActivePath = (path: string) => {
-    return location.includes(path)
+    return location == path
   }
-
-  const getTotalItems = () => 0
+  const totalItems =
+    useHydratedStore(useCartStore, (state) => state.getTotalItems()) || 0
 
   return (
     <header className="sticky top-0 z-50 bg-background opacity-95 backdrop-blur supports-backdrop-filter:bg-background/60  border-b border-border">
@@ -53,7 +55,7 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <div className="bg-hero text-primary-foreground px-3 py-1 rounded-lg font-bold text-lg">
-              Rasa
+              Dapur
             </div>
             <span className="text-xl font-bold text-foreground">Kediri</span>
           </Link>
@@ -81,9 +83,9 @@ const Header = () => {
             <Link href="/cart">
               <Button variant="outline" size="icon" className="relative">
                 <ShoppingCart className="h-4 w-4" />
-                {getTotalItems() > 0 && (
+                {totalItems && totalItems > 0 && (
                   <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                    {getTotalItems()}
+                    {totalItems}
                   </span>
                 )}
               </Button>

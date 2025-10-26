@@ -114,7 +114,7 @@ const Footer = () => {
 
         <div className="border-t border-border/20 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-accent-foreground/60">
-            <p>&copy; 2024 Rasa Kediri. Semua hak dilindungi.</p>
+            <p>&copy; 2024 Dapur Kediri. Semua hak dilindungi.</p>
             <p>Dibuat dengan ❤️ untuk cita rasa Indonesia</p>
           </div>
         </div>
