@@ -1,3 +1,6 @@
+import orderValidation from "@/lib/validations/orderValidation"
+import { z } from "zod"
+
 export interface Menu {
   id: string
   name: string
@@ -13,3 +16,5 @@ export interface Category {
   name: string
   description: string
 }
+
+export type FormDataOrder = z.infer<typeof orderValidation.create>
