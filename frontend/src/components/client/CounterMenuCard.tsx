@@ -16,9 +16,9 @@ function CounterMenuCard({ menu }: CounterMenuCardProps) {
   const [quantity, setQuantity] = useState<number>(0)
 
   const handleAddToCart = () => {
-    addItem({ ...menu, quantity })
-    toast.success("Berhasil masuk ke dalam keranjang")
+    addItem(menu, quantity)
     setQuantity(0)
+    toast.success("Berhasil ditambahkan")
   }
 
   return (
