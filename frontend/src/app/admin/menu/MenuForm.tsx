@@ -40,8 +40,8 @@ function MenuForm({ onOpenChange, menu }: MenuFormProps) {
   const form = useForm({
     resolver: zodResolver(menu ? menuValidation.update : menuValidation.create),
     defaultValues: {
-      name: menu?.name && menu.name,
-      description: menu?.description && menu.description,
+      name: menu?.name || "",
+      description: menu?.description || "",
       price: menu?.price || 0,
       category: menu?.category || "food",
       image: undefined,

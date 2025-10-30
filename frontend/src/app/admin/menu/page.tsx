@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import MenuForm from "./MenuForm"
-import { PlusIcon } from "lucide-react"
+import { PlusIcon, XIcon } from "lucide-react"
 import MenuList from "./MenuList"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Menu } from "@/types"
@@ -35,8 +35,17 @@ function MenuPage() {
           <p className="text-muted-foreground">Tambah dan edit menu restoran</p>
         </div>
         <Button onClick={() => handleMenuForm(!openMenuForm)}>
-          <PlusIcon className="mr-2 h-4 w-4" />
-          {openMenuForm ? "Tutup Form" : "Tambah Menu"}
+          {openMenuForm ? (
+            <>
+              <XIcon className="mr-2 size-4" />
+              Tutup Form
+            </>
+          ) : (
+            <>
+              <PlusIcon className="mr-2 size-4" />
+              Tambah Menu
+            </>
+          )}
         </Button>
       </div>
 
