@@ -304,6 +304,21 @@ function FormCheckout() {
               </CardContent>
             </Card>
 
+            {/* Code Promo */}
+            <Card className="shadow-elegant">
+              <CardHeader>
+                <CardTitle className="text-center">Kode Promo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Input
+                  type="text"
+                  placeholder="Masukkan kode promo"
+                  className="text-center"
+                  onChange={(e) => e.target.value.toUpperCase()}
+                />
+              </CardContent>
+            </Card>
+
             {/* Submit Button */}
             <Button
               type="submit"
