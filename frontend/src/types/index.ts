@@ -1,5 +1,6 @@
 import menuValidation from "@/lib/validations/menuValidation"
 import orderValidation from "@/lib/validations/orderValidation"
+import promotionValidation from "@/lib/validations/promoValidation"
 import { z } from "zod"
 
 export interface Menu {
@@ -51,6 +52,26 @@ export interface OrderItems {
   created_at: Date
 }
 
+export interface Promotion {
+  id: string
+  title: string
+  description: string
+  promo_code: string
+  category: "all" | "food" | "drink" | "snack" | "bundle"
+  discount_type: "percentage" | "fixed_amount"
+  discount_value: number
+  max_discount_value: number | null
+  min_order_amount: number
+  usage_limit: number
+  used_count: number
+  valid_from: Date
+  valid_to: Date
+  active: boolean
+  created_at: Date
+  updated_at?: Date
+}
+
 export type FormDataOrder = z.infer<typeof orderValidation.create>
 export type FormDataMenuCreate = z.infer<typeof menuValidation.create>
 export type FormDataMenuUpdate = z.infer<typeof menuValidation.update>
+export type FormDataPromotionCreate = z.infer<typeof promotionValidation.create>
