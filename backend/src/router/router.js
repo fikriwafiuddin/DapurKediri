@@ -1,10 +1,15 @@
 import express from "express"
+import bcrypt from "bcrypt"
+import prisma from "../database/prisma.js"
+import errorMiddleware from "../middlewares/errorMiddleware.js"
 
 const router = express.Router()
 
-router.get("/", async (req, res) => {
-  const admin = await prisma.admin.findMany()
-  res.json({ message: "Dapur Kediri API is running", admin: admin })
+router.get("/", (req, res, next) => {
+  next("error")
+  res.json({ message: "Welcome to the API" })
 })
+
+router.use(errorMiddleware)
 
 export default router
