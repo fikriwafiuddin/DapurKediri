@@ -3,6 +3,7 @@ import cors from "cors"
 import "dotenv/config"
 import router from "./router/router.js"
 import httpLogger from "./middlewares/httpLogger.js"
+import cookieParser from "cookie-parser"
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -17,6 +18,7 @@ app.use(
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(httpLogger)
+app.use(cookieParser())
 app.use(router)
 
 app.listen(port, () => {
