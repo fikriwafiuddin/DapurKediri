@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin Table
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @db.VarChar(55)
+  email     String   @unique @db.VarChar(55)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admin")
+}
+
+// Enums
+enum CategoryMenu {
+  FOOD
+  DRINK
+  SNACK
+  BUNDLE
+
+  @@map("enum_category_menu")
+}
+
+enum StatusOrder {
+  PENDING
+  CONFIRMED
+  PREPARING
+  DELIVERING
+  COMPLETED
+  CANCELLED
+
+  @@map("enum_status_order")
+}
+
+enum CategoryPromotion {
+  ALL
+  FOOD
+  DRINK
+  SNACK
+  BUNDLE
+
+  @@map("enum_category_promotion")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+
+  @@map("enum_discount_type")
+}
+
+// Menu Table
+model Menu {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique @db.VarChar(30)
+  description String?      @db.VarChar(500)
+  category    CategoryMenu
+  price       Int
+  image       String?      @db.VarChar(255)
+  imageId     String?      @map("image_id") @db.VarChar(255)
+  available   Boolean      @default(true)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  orderItems OrderItem[]
+
+  @@map("menu")
+}
+
+// Order Table
+model Order {
+  id              Int         @id @default(autoincrement())
+  orderNumber     String      @unique @map("order_number")
+  customerName    String      @map("customer_name") @db.VarChar(50)
+  phoneNumber     String      @map("phone_number") @db.VarChar(13)
+  addressStreet   String      @map("address_street") @db.VarChar(100)
+  addressDistrict String      @map("address_district") @db.VarChar(20)
+  addressCity     String      @map("address_city") @db.VarChar(20)
+  addressPostalCode String    @map("address_postal_code") @db.VarChar(5)
+  addressNotes    String?     @map("address_notes") @db.Text
+  totalAmount     Int         @map("total_amount")
+  discountValue   Int?        @default(0) @map("discount_value")
+  promotionId     Int?        @map("promotion_id")
+  status          StatusOrder @default(PENDING)
+  notes           String?     @db.VarChar(500)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  orderItems OrderItem[]
+  promotion  Promotion?  @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+
+  @@index([orderNumber])
+  @@index([status])
+  @@index([createdAt])
+  @@map("order")
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @map("order_id")
+  menuId    Int      @map("menu_id")
+  menuName  String   @map("menu_name") @db.VarChar(30)
+  menuPrice Int      @map("menu_price")
+  quantity  Int
+  notes     String?  @db.VarChar(500)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menu  Menu  @relation(fields: [menuId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([menuId])
+  @@map("order_item")
+}
+
+model Promotion {
+  id             Int                @id @default(autoincrement())
+  title          String             @db.VarChar(15)
+  description    String?            @db.VarChar(100)
+  code           String             @unique @db.VarChar(10)
+  category       CategoryPromotion
+  discountType   DiscountType       @map("discount_type")
+  discountValue  Int                @map("discount_value")
+  maxDiscount    Int?               @map("max_discount")
+  minOrderAmount Int                @map("min_order_amount")
+  usageLimit     Int                @map("usage_limit")
+  usedCount      Int                @default(0) @map("used_count")
+  validFrom      DateTime           @map("valid_from")
+  validTo        DateTime           @map("valid_to")
+  active         Boolean            @default(true)
+  createdAt      DateTime           @default(now()) @map("created_at")
+  updatedAt      DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  orders Order[]
+
+  @@index([code])
+  @@index([active])
+  @@index([validFrom, validTo])
+  @@map("promotion")
+}

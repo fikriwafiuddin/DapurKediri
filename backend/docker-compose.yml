@@ -1,0 +1,23 @@
+services:
+  postgres:
+    # Use an explicit major version for reproducibility. Update to a newer version when you upgrade.
+    image: postgres:16-alpine # Gunakan image versi stabil terbaru
+    restart: always
+    env_file:
+      - .env
+    environment:
+      # keep here for users that don't use env_file; env_file will override these if present
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - dapurkediri_postgres_data:/var/lib/postgresql
+      # optional init scripts (only used on first run)
+      # - ./docker/postgres/initdb.d:/docker-entrypoint-initdb.d:ro
+    ports:
+      - published: 5432
+        target: 5432
+
+volumes:
+  dapurkediri_postgres_data:
+    name: dapurkediri_postgres_data
