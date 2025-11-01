@@ -1,14 +1,15 @@
 import express from "express"
-import bcrypt from "bcrypt"
-import prisma from "../database/prisma.js"
 import errorMiddleware from "../middlewares/errorMiddleware.js"
+import adminRouter from "./admin/index.js"
+import { ErrorResponse } from "../utils/response.js"
 
 const router = express.Router()
 
-router.get("/", (req, res, next) => {
-  next("error")
-  res.json({ message: "Welcome to the API" })
-})
+router.use("/admin", adminRouter)
+
+router.all(/.*/, (req, res) =>
+  res.status(404).json(new ErrorResponse("Route not found", 404))
+)
 
 router.use(errorMiddleware)
 
