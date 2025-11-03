@@ -28,38 +28,38 @@ model Admin {
 
 // Enums
 enum CategoryMenu {
-  FOOD
-  DRINK
-  SNACK
-  BUNDLE
+  food
+  drink
+  snack
+  bundle
 
   @@map("enum_category_menu")
 }
 
 enum StatusOrder {
-  PENDING
-  CONFIRMED
-  PREPARING
-  DELIVERING
-  COMPLETED
-  CANCELLED
+  pending
+  confirmed
+  preparing
+  delivering
+  completed
+  cancelled
 
   @@map("enum_status_order")
 }
 
 enum CategoryPromotion {
-  ALL
-  FOOD
-  DRINK
-  SNACK
-  BUNDLE
+  all
+  food
+  drink
+  snack
+  bundle
 
   @@map("enum_category_promotion")
 }
 
 enum DiscountType {
-  PERCENTAGE
-  FIXED_AMOUNT
+  percentage
+  fixed_amount
 
   @@map("enum_discount_type")
 }
@@ -97,7 +97,7 @@ model Order {
   totalAmount     Int         @map("total_amount")
   discountValue   Int?        @default(0) @map("discount_value")
   promotionId     Int?        @map("promotion_id")
-  status          StatusOrder @default(PENDING)
+  status          StatusOrder @default(pending)
   notes           String?     @db.VarChar(500)
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")

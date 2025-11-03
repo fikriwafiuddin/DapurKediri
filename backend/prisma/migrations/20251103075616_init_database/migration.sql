@@ -1,14 +1,14 @@
 -- CreateEnum
-CREATE TYPE "enum_category_menu" AS ENUM ('FOOD', 'DRINK', 'SNACK', 'BUNDLE');
+CREATE TYPE "enum_category_menu" AS ENUM ('food', 'drink', 'snack', 'bundle');
 
 -- CreateEnum
-CREATE TYPE "enum_status_order" AS ENUM ('PENDING', 'CONFIRMED', 'PREPARING', 'DELIVERING', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "enum_status_order" AS ENUM ('pending', 'confirmed', 'preparing', 'delivering', 'completed', 'cancelled');
 
 -- CreateEnum
-CREATE TYPE "enum_category_promotion" AS ENUM ('ALL', 'FOOD', 'DRINK', 'SNACK', 'BUNDLE');
+CREATE TYPE "enum_category_promotion" AS ENUM ('all', 'food', 'drink', 'snack', 'bundle');
 
 -- CreateEnum
-CREATE TYPE "enum_discount_type" AS ENUM ('PERCENTAGE', 'FIXED_AMOUNT');
+CREATE TYPE "enum_discount_type" AS ENUM ('percentage', 'fixed_amount');
 
 -- CreateTable
 CREATE TABLE "admin" (
@@ -52,7 +52,7 @@ CREATE TABLE "order" (
     "total_amount" INTEGER NOT NULL,
     "discount_value" INTEGER DEFAULT 0,
     "promotion_id" INTEGER,
-    "status" "enum_status_order" NOT NULL DEFAULT 'PENDING',
+    "status" "enum_status_order" NOT NULL DEFAULT 'pending',
     "notes" VARCHAR(500),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
