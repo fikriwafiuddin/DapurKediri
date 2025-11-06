@@ -129,7 +129,9 @@ const remove = async (id) => {
   return removedMenu
 }
 
-const getAll = async () => {
+const getAll = async (input) => {
+  const { category } = input
+
   const menus = await prisma.menu.findMany({
     select: {
       id: true,
@@ -140,6 +142,9 @@ const getAll = async () => {
       image: true,
       available: true,
       createdAt: true,
+    },
+    where: {
+      ...(category !== "all" && { category }),
     },
   })
 

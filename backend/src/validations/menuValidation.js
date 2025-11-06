@@ -103,9 +103,16 @@ const remove = z.object({
   id: z.preprocess((val) => Number(val), z.number("ID menu tidak valid")),
 })
 
+const getAll = z.object({
+  category: z
+    .enum(["all", ...enumCategory], "Categori tidak valid")
+    .default("all"),
+})
+
 const menuValidation = {
   create,
   update,
   remove,
+  getAll,
 }
 export default menuValidation

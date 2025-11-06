@@ -60,7 +60,11 @@ const remove = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-    const menus = await menuService.getAll()
+    const payload = req.query
+
+    const input = validation(menuValidation.getAll, payload)
+
+    const menus = await menuService.getAll(input)
 
     return res
       .status(200)
