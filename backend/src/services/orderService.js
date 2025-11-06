@@ -1,5 +1,6 @@
 import prisma from "../database/prisma.js"
 import { ErrorResponse } from "../utils/response.js"
+import { validateAndCalculatePromotion } from "./promoService.js"
 
 // Helper function to generate order number
 function generateOrderNumber() {
@@ -64,10 +65,22 @@ const create = async (input) => {
 
   // Create order and order items in a transaction
   return await prisma.$transaction(async (tx) => {
-    // Create the order first
+    // Promotion handling (evaluate separately)
+    const { appliedPromotion, discountValue } =
+      await validateAndCalculatePromotion(
+        tx,
+        input.promotionId,
+        input,
+        menuMap,
+        totalAmount,
+        orderItems
+      )
+
+    const finalTotal = Math.max(0, totalAmount - discountValue)
+
     const order = await tx.order.create({
       data: {
-        orderNumber: generateOrderNumber(), // You need to implement this
+        orderNumber: generateOrderNumber(),
         customerName: input.customerName,
         phoneNumber: input.phoneNumber,
         addressStreet: input.address.street,
@@ -76,8 +89,10 @@ const create = async (input) => {
         addressPostalCode: input.address.postalCode || undefined,
         addressNotes: input.address.notes,
         notes: input.notes,
-        totalAmount: totalAmount,
-        status: "pending", // Default status
+        totalAmount: finalTotal,
+        discountValue: discountValue || 0,
+        promotionId: appliedPromotion ? appliedPromotion.id : undefined,
+        status: "pending",
       },
     })
 
@@ -92,6 +107,13 @@ const create = async (input) => {
       })),
     })
 
+    // increment promotion usedCount if applied
+    if (appliedPromotion) {
+      await tx.promotion.update({
+        where: { id: appliedPromotion.id },
+        data: { usedCount: appliedPromotion.usedCount + 1 },
+      })
+    }
     // Return order with items
     return await tx.order.findUnique({
       where: { id: order.id },

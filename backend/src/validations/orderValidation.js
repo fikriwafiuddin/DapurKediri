@@ -104,6 +104,9 @@ const create = z.object({
       }
     )
     .min(1, "Menu yang dibeli minimal 1"),
+  promotionId: z
+    .preprocess((val) => Number(val), z.number("ID diskon tidak valid"))
+    .optional(),
 })
 
 const getAll = z
