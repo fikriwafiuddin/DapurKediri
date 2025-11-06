@@ -151,10 +151,21 @@ const getAll = async (input) => {
   return menus
 }
 
+const favorite = async () => {
+  const menus = await prisma.menu.findMany({
+    where: {
+      available: true,
+    },
+    take: 4,
+  })
+  return menus
+}
+
 const menuService = {
   create,
   update,
   remove,
   getAll,
+  favorite,
 }
 export default menuService

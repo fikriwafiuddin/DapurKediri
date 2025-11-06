@@ -81,11 +81,27 @@ const getAll = async () => {
   return promotions
 }
 
+const special = async () => {
+  const promotions = await prisma.promotion.findMany({
+    where: {
+      active: true,
+      validFrom: { lte: new Date() },
+      validTo: { gte: new Date() },
+    },
+    take: 2,
+    orderBy: {
+      validFrom: "asc",
+    },
+  })
+  return promotions
+}
+
 const promotionService = {
   create,
   update,
   remove,
   show,
   getAll,
+  special,
 }
 export default promotionService

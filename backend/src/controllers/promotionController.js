@@ -72,11 +72,25 @@ const getAll = async (req, res, next) => {
   }
 }
 
+const special = async (req, res, next) => {
+  try {
+    const promotions = await promotionService.special()
+    return res
+      .status(200)
+      .json(
+        new SuccessResponse("Promo spesial berhasil diambil", { promotions })
+      )
+  } catch (error) {
+    next(error)
+  }
+}
+
 const promotionController = {
   create,
   update,
   remove,
   show,
   getAll,
+  special,
 }
 export default promotionController

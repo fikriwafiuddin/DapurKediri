@@ -74,10 +74,22 @@ const getAll = async (req, res, next) => {
   }
 }
 
+const favorite = async (req, res, next) => {
+  try {
+    const menus = await menuService.favorite()
+    return res
+      .status(200)
+      .json(new SuccessResponse("Menu favorit berhasil diambil", { menus }))
+  } catch (error) {
+    next(error)
+  }
+}
+
 const menuController = {
   create,
   update,
   remove,
   getAll,
+  favorite,
 }
 export default menuController
