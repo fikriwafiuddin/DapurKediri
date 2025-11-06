@@ -1,3 +1,4 @@
+import authValidation from "@/lib/validations/authValidation"
 import menuValidation from "@/lib/validations/menuValidation"
 import orderValidation from "@/lib/validations/orderValidation"
 import promotionValidation from "@/lib/validations/promoValidation"
@@ -75,3 +76,4 @@ export type FormDataOrder = z.infer<typeof orderValidation.create>
 export type FormDataMenuCreate = z.infer<typeof menuValidation.create>
 export type FormDataMenuUpdate = z.infer<typeof menuValidation.update>
 export type FormDataPromotionCreate = z.infer<typeof promotionValidation.create>
+export type FormDataLogin = z.infer<typeof authValidation.login>
