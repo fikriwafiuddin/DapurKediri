@@ -8,52 +8,13 @@ import {
   TruckIcon,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { getFavoriteMenu } from "@/services/api/server/menuApi"
+import { getSpecialPromotion } from "@/services/api/server/promotionApi"
 
-const featuredItems = [
-  {
-    id: "1",
-    name: "Nasi Pecel Spesial",
-    description:
-      "Nasi pecel dengan bumbu kacang khas Kediri, dilengkapi sayuran segar dan kerupuk",
-    price: 15000,
-    image: "/src/assets/nasi-pecel.jpg",
-    category: "1",
-    available: true,
-  },
-  {
-    id: "2",
-    name: "Tahu Campur Kediri",
-    description: "Tahu campur autentik dengan kuah gurih dan sayuran segar",
-    price: 12000,
-    image: "/src/assets/tahu-campur.jpg",
-    category: "2",
-    available: true,
-  },
-  {
-    id: "3",
-    name: "Sambal Pecel",
-    description: "Sambal pecel khas dengan rasa pedas yang pas",
-    price: 5000,
-    image: "/src/assets/sambal.jpg",
-    category: "3",
-    available: true,
-  },
-]
+export default async function Home() {
+  const { menus } = await getFavoriteMenu()
+  const { promotions } = await getSpecialPromotion()
 
-const promotions = [
-  {
-    id: "1",
-    title: "Promo Beli 2 Gratis 1",
-    description: "Beli 2 Nasi Pecel gratis 1 Tahu Campur",
-    discountType: "percentage",
-    discountValue: 33,
-    validFrom: new Date(),
-    validTo: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    active: true,
-  },
-]
-
-export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -133,7 +94,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredItems.map((item) => (
+            {menus.map((item) => (
               <Card
                 key={item.id}
                 className="overflow-hidden shadow-warm hover:shadow-elegant transition-all duration-300"
@@ -200,9 +161,25 @@ export default function Home() {
                     <h3 className="text-2xl font-bold mb-3">
                       {promotion.title}
                     </h3>
-                    <p className="text-white/90 mb-6">
+
+                    <p className="text-white/90 mb-4">
                       {promotion.description}
                     </p>
+
+                    {/* Kode Promo */}
+                    {promotion.code && (
+                      <div className="mb-6">
+                        <p className="text-sm text-white/70 mb-1">
+                          Kode Promo:
+                        </p>
+                        <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-md">
+                          <code className="font-mono tracking-wide text-lg">
+                            {promotion.code}
+                          </code>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex items-center justify-between">
                       <div className="text-3xl font-bold">
                         {promotion.discountType === "percentage"
@@ -211,6 +188,7 @@ export default function Home() {
                               "id-ID"
                             )} OFF`}
                       </div>
+
                       <Link href="/menu">
                         <Button variant="warm">Gunakan Promo</Button>
                       </Link>

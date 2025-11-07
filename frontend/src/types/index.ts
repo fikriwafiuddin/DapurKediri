@@ -57,19 +57,36 @@ export interface Promotion {
   id: string
   title: string
   description: string
-  promo_code: string
+  code: string
   category: "all" | "food" | "drink" | "snack" | "bundle"
-  discount_type: "percentage" | "fixed_amount"
-  discount_value: number
-  max_discount_value: number | null
-  min_order_amount: number
-  usage_limit: number
-  used_count: number
-  valid_from: Date
-  valid_to: Date
+  discountType: "percentage" | "fixed_amount"
+  discountValue: number
+  maxDiscount: number | null
+  minOrderAmount: number
+  usageLimit: number
+  usedCount: number
+  validFrom: Date
+  validTo: Date
   active: boolean
-  created_at: Date
-  updated_at?: Date
+  createdAt: Date
+  updatedAt?: Date
+}
+
+export interface SuccessResponse<TData> {
+  success: true
+  message: string
+  data: TData
+  mete: {
+    timestamp: string
+  }
+}
+
+export interface ErrorResponse<TErrors = Record<string, unknown>> {
+  success: false
+  message: string
+  errors: TErrors | Record<string, unknown>
+  data: object
+  meta: { timestamp: string }
 }
 
 export type FormDataOrder = z.infer<typeof orderValidation.create>
