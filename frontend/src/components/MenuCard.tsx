@@ -1,7 +1,5 @@
-import React from "react"
 import { Card, CardContent } from "./ui/card"
 import { Menu } from "@/types"
-import { StarIcon } from "lucide-react"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import CounterMenuCard from "./client/CounterMenuCard"
@@ -28,10 +26,10 @@ function MenuCard({ menu }: MenuCardProps) {
               Rp {menu.price.toLocaleString("id-ID")}
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
+              {/* <div className="flex items-center gap-1">
                 <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
                 <span className="text-sm text-muted-foreground">4.8</span>
-              </div>
+              </div> */}
               {menu.available ? (
                 <Badge
                   variant="secondary"
