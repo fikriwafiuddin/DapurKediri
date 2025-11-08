@@ -8,22 +8,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tag, Calendar, Percent } from "lucide-react"
+import { getPromotions } from "@/services/api/server/promotionApi"
 
-const promotions = [
-  {
-    id: "1",
-    title: "Promo Beli 2 Gratis 1",
-    description: "Beli 2 Nasi Pecel gratis 1 Tahu Campur",
-    discountType: "percentage",
-    discountValue: 33,
-    validFrom: new Date(),
-    validTo: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    active: true,
-  },
-]
-
-function PromoPage() {
-  const isLoading = false
+async function PromoPage() {
+  const { promotions } = await getPromotions()
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,21 +34,7 @@ function PromoPage() {
       {/* Promotions List */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardHeader>
-                    <div className="h-6 bg-muted rounded w-3/4 mb-2"></div>
-                    <div className="h-4 bg-muted rounded w-full"></div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-20 bg-muted rounded"></div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : promotions && promotions.length > 0 ? (
+          {promotions.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {promotions.map((promo) => (
                 <Card
@@ -100,8 +74,10 @@ function PromoPage() {
                       <span>
                         Berlaku:{" "}
                         {promo.validFrom &&
-                          promo.validFrom.toLocaleDateString()}{" "}
-                        - {promo.validTo && promo.validTo.toLocaleDateString()}
+                          new Date(promo.validFrom).toLocaleDateString()}{" "}
+                        -{" "}
+                        {promo.validTo &&
+                          new Date(promo.validTo).toLocaleDateString()}
                       </span>
                     </div>
                     <Button variant="hero" className="w-full">
