@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getDetailOrder } from "@/services/api/server/orderApi"
 import {
   ArrowRightIcon,
   CheckCircleIcon,
@@ -10,53 +11,14 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-const order = {
-  id: "orderId",
-  customerName: "Customer Name",
-  phoneNumber: "081234567890",
-  address: {
-    street: "Jl. Contoh No. 123",
-    district: "Kecamatan",
-    city: "Kediri",
-    notes: "Dekat warung pak RT",
-  },
-  items: [
-    {
-      menu: {
-        id: "1",
-        name: "Nasi Pecel Spesial",
-        description:
-          "Nasi pecel dengan bumbu kacang khas Kediri, dilengkapi sayuran segar dan kerupuk.",
-        price: 15000,
-        image: "/src/assets/nasi-pecel.jpg",
-        category: "1",
-        available: true,
-      },
-      quantity: 2,
-      notes: "",
-    },
-    {
-      menu: {
-        id: "2",
-        name: "Nasi Rawon Kediri",
-        description:
-          "Rawon khas Kediri dengan kuah hitam pekat dan daging sapi empuk.",
-        price: 20000,
-        image: "/src/assets/nasi-rawon.jpg",
-        category: "1",
-        available: true,
-      },
-      quantity: 2,
-      notes: "",
-    },
-  ],
-  totalAmount: 0,
-  status: "pending",
-  createdAt: new Date(),
-  notes: "",
-}
+async function ConfirmationPage({
+  params,
+}: {
+  params: Promise<{ orderNumber: string }>
+}) {
+  const { orderNumber } = await params
+  const { order } = await getDetailOrder(orderNumber)
 
-function ConfirmationPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="container mx-auto px-4">
@@ -83,7 +45,7 @@ function ConfirmationPage() {
                   variant="secondary"
                   className="bg-primary/10 text-primary"
                 >
-                  {order.id}
+                  {order.orderNumber}
                 </Badge>
               </CardTitle>
             </CardHeader>
@@ -115,13 +77,13 @@ function ConfirmationPage() {
                   <p className="text-sm text-muted-foreground mb-1">
                     Alamat Pengiriman
                   </p>
-                  <p className="font-medium">{order.address.street}</p>
+                  <p className="font-medium">{order.addressStreet}</p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.district}, {order.address.city}
+                    {order.addressDistrict}, {order.addressCity}
                   </p>
-                  {order.address.notes && (
+                  {order.addressNotes && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      Catatan: {order.address.notes}
+                      Catatan: {order.addressNotes}
                     </p>
                   )}
                 </div>
@@ -131,16 +93,16 @@ function ConfirmationPage() {
               <div>
                 <h3 className="font-semibold mb-3">Item Pesanan</h3>
                 <div className="space-y-2">
-                  {order.items.map((item) => (
+                  {order.orderItems?.map((item) => (
                     <div
-                      key={`confirmation-${item.menu.id}`}
+                      key={`confirmation-${item.id}`}
                       className="flex justify-between items-center py-2"
                     >
                       <div className="flex-1">
-                        <p className="font-medium">{item.menu.name}</p>
+                        <p className="font-medium">{item.menuName}</p>
                         <p className="text-sm text-muted-foreground">
                           {item.quantity}x @ Rp{" "}
-                          {item.menu.price.toLocaleString("id-ID")}
+                          {item.menuPrice.toLocaleString("id-ID")}
                         </p>
                         {item.notes && (
                           <p className="text-xs text-muted-foreground italic">
@@ -150,7 +112,7 @@ function ConfirmationPage() {
                       </div>
                       <p className="font-semibold">
                         Rp{" "}
-                        {(item.menu.price * item.quantity).toLocaleString(
+                        {(item.menuPrice * item.quantity).toLocaleString(
                           "id-ID"
                         )}
                       </p>

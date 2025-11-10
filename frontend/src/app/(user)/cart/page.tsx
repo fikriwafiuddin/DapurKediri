@@ -14,7 +14,6 @@ import {
   Trash2Icon,
 } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 
 function CartPage() {
   const items = useHydratedStore(useCartStore, (state) => state.items) || []
@@ -25,7 +24,6 @@ function CartPage() {
   const removeItem = useCartStore((state) => state.removeItem)
   const clearCart = useCartStore((state) => state.clearCart)
   const updateNotes = useCartStore((state) => state.updateNotes)
-  const [globalNotes, setGlobalNotes] = useState("")
 
   if (items.length === 0) {
     return (
@@ -143,9 +141,9 @@ function CartPage() {
                           <Textarea
                             id={`notes-${item.menu.id}`}
                             placeholder="Contoh: jangan terlalu pedas, sambal dipisah"
-                            value={item.notes || ""}
+                            value={item.notes}
                             onChange={(e) =>
-                              updateNotes(item.menu.id, e.target.value)
+                              updateNotes(e.target.value, item.menu.id)
                             }
                             className="mt-1"
                             rows={2}
@@ -158,7 +156,7 @@ function CartPage() {
               ))}
 
               {/* Global Notes */}
-              <Card className="shadow-warm">
+              {/* <Card className="shadow-warm">
                 <CardHeader>
                   <CardTitle className="text-lg">Catatan Tambahan</CardTitle>
                 </CardHeader>
@@ -170,7 +168,7 @@ function CartPage() {
                     rows={3}
                   />
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
 
             {/* Order Summary */}

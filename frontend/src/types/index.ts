@@ -22,15 +22,15 @@ export interface Category {
 
 export interface Order {
   id: string
-  order_number: string
-  customer_name: string
-  phone_number: string
-  address_street: string
-  address_district: string
-  address_city: string
-  address_postal_code: string
-  address_notes: string
-  total_amount: number
+  orderNumber: string
+  customerName: string
+  phoneNumber: string
+  addressStreet: string
+  addressDistrict: string
+  addressCity: string
+  addressPostalCode: string
+  addressNotes: string
+  totalAmount: number
   status:
     | "pending"
     | "confirmed"
@@ -39,15 +39,16 @@ export interface Order {
     | "completed"
     | "cancelled"
   notes: string
+  orderItems?: OrderItems[]
   created_at: Date
 }
 
 export interface OrderItems {
   id: string
-  order_id: string
-  menu_item_id: string
-  menu_item_name: string
-  menu_item_price: number
+  orderId: string
+  menuId: string
+  menuName: string
+  menuPrice: number
   quantity: number
   notes: string
   created_at: Date
@@ -70,6 +71,11 @@ export interface Promotion {
   active: boolean
   createdAt: Date
   updatedAt?: Date
+}
+
+export interface CartItem {
+  id: string
+  quantity: number
 }
 
 export interface SuccessResponse<TData> {

@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button"
 import useHydratedStore from "@/hooks/useHydratedStore"
 import useCartStore from "@/hooks/useCartStore"
 import { useRouter } from "next/navigation"
+import { useCreateOrder } from "@/services/hooks/orderHook"
+import { Spinner } from "@/components/ui/spinner"
+import { toast } from "sonner"
 
 function FormCheckout() {
   const form = useForm({
@@ -43,14 +46,33 @@ function FormCheckout() {
     },
   })
   const router = useRouter()
+  const { isPending, mutate } = useCreateOrder()
 
   const items = useHydratedStore(useCartStore, (state) => state.items) || []
   const totalAmout =
     useHydratedStore(useCartStore, (state) => state.getTotalPrice()) || 0
+  const clearCart = useCartStore((state) => state.clearCart)
 
   const onSubmit = (data: FormDataOrder) => {
-    console.log(data)
-    router.push("/confirmation")
+    if (items.length == 0) {
+      return toast.error("Keranjang masih kosong")
+    }
+
+    mutate(
+      {
+        data,
+        items: items.map((item) => ({
+          id: item.menu.id,
+          quantity: item.quantity,
+        })),
+      },
+      {
+        onSuccess: (data) => {
+          clearCart()
+          router.push(`/confirmation/${data.order.orderNumber}`)
+        },
+      }
+    )
   }
 
   return (
@@ -325,9 +347,9 @@ function FormCheckout() {
               variant="hero"
               size="lg"
               className="w-full"
-              //   disabled={isSubmitting}
+              disabled={isPending}
             >
-              {/* {isSubmitting ? "Memproses..." : "Konfirmasi Pesanan"} */}
+              {isPending ? <Spinner /> : "Konfirmasi Pesanan"}
               Konfirmasi Pesanan
             </Button>
 
