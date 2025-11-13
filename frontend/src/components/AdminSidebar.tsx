@@ -3,7 +3,6 @@
 import {
   FileTextIcon,
   LayoutDashboardIcon,
-  LogOutIcon,
   ShoppingCartIcon,
   TagIcon,
   UtensilsCrossedIcon,
@@ -20,6 +19,7 @@ import {
 } from "./ui/sidebar"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import LogoutButton from "./LogoutButton"
 
 const menuItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboardIcon },
@@ -60,9 +60,7 @@ function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <LogOutIcon className="h-4 w-4" /> <span>Logout</span>
-                </SidebarMenuButton>
+                <LogoutButton />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

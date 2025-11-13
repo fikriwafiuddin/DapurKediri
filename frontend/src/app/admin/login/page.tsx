@@ -8,19 +8,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Form, FormField } from "@/components/ui/form"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
 import authValidation from "@/lib/validations/authValidation"
+import { useAuthLogin } from "@/services/hooks/authHook"
 import { FormDataLogin } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 function LoginPage() {
-  const form = useForm({ resolver: zodResolver(authValidation.login) })
+  const form = useForm({
+    resolver: zodResolver(authValidation.login),
+    defaultValues: { email: "", password: "" },
+  })
+  const { isPending, mutate: login } = useAuthLogin()
 
   const onSubmit = (data: FormDataLogin) => {
-    console.log(data)
+    login(data)
   }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/10 via-background to-secondary/10 p-4">
       <Card className="w-full max-w-md">
@@ -37,7 +50,11 @@ function LoginPage() {
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <Input type="email" {...field} required />
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <Input type="email" {...field} required />
+                    <FormMessage />
+                  </FormItem>
                 )}
               />
 
@@ -45,12 +62,15 @@ function LoginPage() {
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <Input type="password" {...field} required />
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <Input type="password" {...field} required />
+                    <FormMessage />
+                  </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                {/* {loading ? 'Loading...' : 'Login'} */}
-                Login
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? <Spinner /> : "Login"}
               </Button>
             </form>
           </Form>

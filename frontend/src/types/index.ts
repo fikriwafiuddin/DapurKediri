@@ -4,6 +4,11 @@ import orderValidation from "@/lib/validations/orderValidation"
 import promotionValidation from "@/lib/validations/promoValidation"
 import { z } from "zod"
 
+export interface Admin {
+  id: number
+  email: string
+}
+
 export interface Menu {
   id: string
   name: string
