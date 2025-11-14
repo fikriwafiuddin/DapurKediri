@@ -40,9 +40,9 @@ function ReportsPage() {
         </Select>
       </div>
 
-      <Stats />
+      <Stats period={period} />
 
-      <TopMenus />
+      <TopMenus period={period} />
     </div>
   )
 }
