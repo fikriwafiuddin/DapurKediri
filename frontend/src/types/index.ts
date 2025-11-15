@@ -45,7 +45,7 @@ export interface Order {
     | "cancelled"
   notes: string
   orderItems?: OrderItems[]
-  created_at: Date
+  createdAt: Date
 }
 
 export interface OrderItems {
@@ -99,6 +99,14 @@ export interface ErrorResponse<TErrors = Record<string, unknown>> {
   data: object
   meta: { timestamp: string }
 }
+
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "preparing"
+  | "delivering"
+  | "completed"
+  | "cancelled"
 
 export type FormDataOrder = z.infer<typeof orderValidation.create>
 export type FormDataMenuCreate = z.infer<typeof menuValidation.create>

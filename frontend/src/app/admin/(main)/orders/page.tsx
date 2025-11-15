@@ -28,7 +28,7 @@ function OrdersPage() {
       </div>
 
       {selectedOrder ? (
-        <OrderDetail order={selectedOrder} />
+        <OrderDetail order={selectedOrder} onSelectOrder={setSelectedOrder} />
       ) : (
         <OrderList onSelectOrder={setSelectedOrder} />
       )}
