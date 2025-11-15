@@ -80,9 +80,9 @@ async function PromoPage() {
                           new Date(promo.validTo).toLocaleDateString()}
                       </span>
                     </div>
-                    <Button variant="hero" className="w-full">
-                      Gunakan Promo
-                    </Button>
+                    <div className="border-2 border-input rounded-xl text-primary font-semibold text-center p-2">
+                      {promo.code}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
