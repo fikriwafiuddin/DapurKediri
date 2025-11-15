@@ -22,41 +22,66 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import DateInput from "@/components/DateInput"
+import {
+  useCreatePromotion,
+  useUpdatePromotion,
+} from "@/services/hooks/promotionHook"
+import { Spinner } from "@/components/ui/spinner"
 
 type PromotionFormProps = {
   promotion?: Promotion | null
   onOpenChange: (open: boolean) => void
+  onSelectMenu: (promotion: Promotion | null) => void
 }
 
-function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
+function PromotionForm({
+  promotion,
+  onOpenChange,
+  onSelectMenu,
+}: PromotionFormProps) {
   const form = useForm({
     resolver: zodResolver(promotionValidation.create),
     defaultValues: {
       title: promotion?.title || "",
       description: promotion?.description || "",
-      code: promotion?.promo_code || "",
+      code: promotion?.code || "",
       category: promotion?.category || "all",
-      discount_value: promotion?.discount_value || 0,
-      discount_type: promotion?.discount_type || "percentage",
-      max_discount_value: promotion?.max_discount_value || 0,
-      min_order_amount: promotion?.min_order_amount || 0,
-      usage_limit: promotion?.usage_limit || 0,
-      valid_from: new Date(promotion?.valid_from || new Date()),
-      valid_to: new Date(
-        promotion?.valid_to || new Date().setMonth(new Date().getMonth() + 1)
+      discountValue: promotion?.discountValue || 0,
+      discountType: promotion?.discountType || "percentage",
+      maxDiscount: promotion?.maxDiscount || 0,
+      minOrderAmount: promotion?.minOrderAmount || 0,
+      usageLimit: promotion?.usageLimit || 0,
+      validFrom: new Date(promotion?.validFrom || new Date()),
+      validTo: new Date(
+        promotion?.validTo || new Date().setMonth(new Date().getMonth() + 1)
       ),
       active: promotion?.active ?? true,
     },
   })
   const currentType = useWatch({
     control: form.control,
-    name: "discount_type",
+    name: "discountType",
     defaultValue: "percentage",
   })
+  const { isPending: creating, mutate: create } = useCreatePromotion()
+  const { isPending: updating, mutate: update } = useUpdatePromotion()
 
   const onSubmit = (data: FormDataPromotionCreate) => {
-    console.log(data)
-    onOpenChange(false)
+    if (promotion) {
+      update(
+        { id: promotion.id, data },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+            onSelectMenu(null)
+          },
+        }
+      )
+    } else {
+      create(data, {
+        onSuccess: () => onOpenChange(false),
+      })
+    }
   }
 
   return (
@@ -134,7 +159,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="discount_type"
+          name="discountType"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tipe Diskon</FormLabel>
@@ -156,7 +181,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="discount_value"
+          name="discountValue"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nilai Diskon</FormLabel>
@@ -179,7 +204,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
         {currentType == "percentage" && (
           <FormField
             control={form.control}
-            name="max_discount_value"
+            name="maxDiscount"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nilai Maksimal</FormLabel>
@@ -202,7 +227,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="min_order_amount"
+          name="minOrderAmount"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Nilai Minimal</FormLabel>
@@ -224,7 +249,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="usage_limit"
+          name="usageLimit"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Limit Penggunaan</FormLabel>
@@ -246,7 +271,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="valid_from"
+          name="validFrom"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Berlaku Dari</FormLabel>
@@ -260,7 +285,7 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
 
         <FormField
           control={form.control}
-          name="valid_to"
+          name="validTo"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Berlaku Sampai</FormLabel>
@@ -292,8 +317,12 @@ function PromotionForm({ promotion, onOpenChange }: PromotionFormProps) {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Simpan
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={creating || creating}
+        >
+          {creating || updating ? <Spinner /> : "Simpan"}
         </Button>
       </form>
     </Form>

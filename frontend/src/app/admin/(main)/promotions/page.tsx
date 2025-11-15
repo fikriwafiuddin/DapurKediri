@@ -61,6 +61,7 @@ function PromotionsPage() {
           {openPromotionForm ? (
             <PromotionForm
               onOpenChange={setOpenPromotionForm}
+              onSelectMenu={setSelectedPromotion}
               promotion={selectedPromotion}
             />
           ) : (

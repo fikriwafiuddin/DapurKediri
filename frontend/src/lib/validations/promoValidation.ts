@@ -36,13 +36,13 @@ const create = z
           ? "Kategori wajib diisi"
           : "Kategori tidak sesuai",
     }),
-    discount_type: z.enum(enumDiscountTypes, {
+    discountType: z.enum(enumDiscountTypes, {
       error: (issue) =>
         issue.input == undefined
           ? "Tipe diskon wajib diisi"
           : "Tipe diskon tidak sesuai",
     }),
-    discount_value: z.preprocess(
+    discountValue: z.preprocess(
       (val) => Number(val),
       z
         .number({
@@ -54,33 +54,33 @@ const create = z
         .positive("Nilai diskon harus lebih dari 0")
         .default(0)
     ),
-    max_discount_value: z
+    maxDiscount: z
       .preprocess(
         (val) => (val === "" ? null : Number(val)),
         z.number("Nilai maksimal diskon harus berupa angka").default(0)
       )
       .nullable()
       .optional(),
-    min_order_amount: z.preprocess(
+    minOrderAmount: z.preprocess(
       (val) => Number(val),
       z
         .number("Minimal jumlah order harus berupa angka")
         .min(0, "Minimal jumlah order tidak boleh kurang dari 0")
         .default(0)
     ),
-    usage_limit: z.preprocess(
+    usageLimit: z.preprocess(
       (val) => Number(val),
       z
         .number("Batas penggunaan harus berupa angka")
         .positive("Batas penggunaan harus lebih dari 0")
     ),
-    valid_from: z.date({
+    validFrom: z.date({
       error: (issue) =>
         issue.input == undefined
           ? "Tanggal mulai wajib diisi"
           : "Tanggal mulai harus berupa tanggal",
     }),
-    valid_to: z.date({
+    validTo: z.date({
       error: (issue) =>
         issue.input == undefined
           ? "Tanggal berakhir wajib diisi"
@@ -95,20 +95,20 @@ const create = z
       })
       .default(true),
   })
-  .refine((data) => new Date(data.valid_to) > new Date(data.valid_from), {
+  .refine((data) => new Date(data.validTo) > new Date(data.validFrom), {
     message: "Tanggal akhir harus setelahnya tanggal mulai",
-    path: ["valid_to"],
+    path: ["validTo"],
   })
   .refine(
     (data) => {
-      if (data.discount_type === "percentage") {
-        return data.discount_value <= 100
+      if (data.discountType === "percentage") {
+        return data.discountValue <= 100
       }
       return true
     },
     {
       message: "Nilai diskon persentase maksimal 100",
-      path: ["value"],
+      path: ["discountValue"],
     }
   )
 
