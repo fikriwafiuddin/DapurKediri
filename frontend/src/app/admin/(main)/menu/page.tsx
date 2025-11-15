@@ -55,7 +55,11 @@ function MenuPage() {
         </CardHeader>
         <CardContent>
           {openMenuForm ? (
-            <MenuForm onOpenChange={setOpenMenuForm} menu={selectedMenu} />
+            <MenuForm
+              onOpenChange={setOpenMenuForm}
+              menu={selectedMenu}
+              onSelectMenu={setSelectedMenu}
+            />
           ) : (
             <MenuList onSelectMenu={handleSelectMenu} />
           )}

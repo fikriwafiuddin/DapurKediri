@@ -42,10 +42,11 @@ const create = z.object({
     }),
     public_id: z.string("Gambar yang diuggah tidak memiliki public_id"),
   }),
-  available: z
-    .boolean("Status ketersediaan harus berupa boolean")
-    .optional()
-    .default(true),
+  available: z.preprocess((val) => {
+    if (val === "true") return true
+    if (val === "false") return false
+    return val
+  }, z.boolean("Status ketersediaan harus berupa boolean").optional().default(true)),
 })
 
 const update = z.object({
@@ -93,10 +94,11 @@ const update = z.object({
       public_id: z.string("Gambar yang diuggah tidak memiliki public_id"),
     })
     .optional(),
-  available: z
-    .boolean("Status ketersediaan harus berupa boolean")
-    .optional()
-    .default(true),
+  available: z.preprocess((val) => {
+    if (val === "true") return true
+    if (val === "false") return false
+    return val
+  }, z.boolean("Status ketersediaan harus berupa boolean").optional().default(true)),
 })
 
 const remove = z.object({

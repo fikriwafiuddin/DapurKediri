@@ -15,9 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import menuValidation from "@/lib/validations/menuValidation"
+import { useCreateMenu, useEditMenu } from "@/services/hooks/menuHook"
 import { FormDataMenuCreate, FormDataMenuUpdate, Menu } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
@@ -27,6 +29,7 @@ import { useForm } from "react-hook-form"
 type MenuFormProps = {
   onOpenChange: (open: boolean) => void
   menu?: Menu | null
+  onSelectMenu: (menu: Menu | null) => void
 }
 
 const categories = [
@@ -36,7 +39,7 @@ const categories = [
   { id: "bundle", name: "Paket" },
 ]
 
-function MenuForm({ onOpenChange, menu }: MenuFormProps) {
+function MenuForm({ onOpenChange, menu, onSelectMenu }: MenuFormProps) {
   const form = useForm({
     resolver: zodResolver(menu ? menuValidation.update : menuValidation.create),
     defaultValues: {
@@ -49,14 +52,39 @@ function MenuForm({ onOpenChange, menu }: MenuFormProps) {
     },
   })
   const [prevImage, setPrevImage] = useState<string | null>(null)
+  const { isPending: creating, mutate: create } = useCreateMenu()
+  const { isPending: updating, mutate: update } = useEditMenu()
 
   const onSubmit = (data: FormDataMenuCreate | FormDataMenuUpdate) => {
-    console.log(data)
-    if (prevImage) {
-      URL.revokeObjectURL(prevImage)
-      setPrevImage(null)
+    if (menu) {
+      update(
+        { id: menu.id, data },
+        {
+          onSuccess: () => {
+            if (prevImage) {
+              URL.revokeObjectURL(prevImage)
+              setPrevImage(null)
+            }
+            onOpenChange(false)
+            form.reset()
+            onSelectMenu(null)
+          },
+        }
+      )
+    } else {
+      const createData = data as FormDataMenuCreate
+      create(createData, {
+        onSuccess: () => {
+          if (prevImage) {
+            URL.revokeObjectURL(prevImage)
+            setPrevImage(null)
+          }
+          onOpenChange(false)
+          form.reset()
+          onSelectMenu(null)
+        },
+      })
     }
-    onOpenChange(false)
   }
 
   return (
@@ -205,8 +233,12 @@ function MenuForm({ onOpenChange, menu }: MenuFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Simpan
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={creating || updating}
+        >
+          {creating || updating ? <Spinner /> : "Simpan"}
         </Button>
       </form>
     </Form>
