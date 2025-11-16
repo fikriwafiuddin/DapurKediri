@@ -121,6 +121,14 @@ async function ConfirmationPage({
                 </div>
 
                 <div className="border-t pt-3 mt-3">
+                  {order?.discountValue && (
+                    <div className="flex justify-between items-center font-semibold">
+                      <span>Diskon</span>
+                      <span className="text-primary">
+                        Rp {order.discountValue.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>Total Pembayaran</span>
                     <span className="text-primary">

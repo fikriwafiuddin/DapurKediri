@@ -72,6 +72,7 @@ const create = z.object({
     .trim()
     .max(500, "Catatan tidak boleh lebih dari 500 karakter")
     .optional(),
+  promotionId: z.string("ID promo harus berupa string").optional(),
 })
 
 const orderValidation = {

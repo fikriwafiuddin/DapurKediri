@@ -11,7 +11,7 @@ import {
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import orderValidation from "@/lib/validations/orderValidation"
-import { FormDataOrder } from "@/types"
+import { ErrorResponse, FormDataOrder, Promotion } from "@/types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   CheckCircleIcon,
@@ -28,6 +28,10 @@ import { useRouter } from "next/navigation"
 import { useCreateOrder } from "@/services/hooks/orderHook"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "sonner"
+import { useState } from "react"
+import { axiosIntance } from "@/lib/fetchers/client"
+import { unwrapResponse } from "@/lib/responseHandler"
+import { AxiosError } from "axios"
 
 function FormCheckout() {
   const form = useForm({
@@ -47,6 +51,12 @@ function FormCheckout() {
   })
   const router = useRouter()
   const { isPending, mutate } = useCreateOrder()
+  const [codePromo, setCodePromo] = useState<string>("")
+  const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(
+    null
+  )
+  const [isLoadingSearchPromo, setIsLoadingSearchPromo] =
+    useState<boolean>(false)
 
   const items = useHydratedStore(useCartStore, (state) => state.items) || []
   const totalAmout =
@@ -73,6 +83,30 @@ function FormCheckout() {
         },
       }
     )
+  }
+
+  const handleSearchPromo = async () => {
+    setIsLoadingSearchPromo(true)
+    try {
+      const response = await axiosIntance.get(`/promotions/${codePromo}`)
+
+      const data = unwrapResponse<{ promotion: Promotion }>(response.data)
+      toast.success(data.message)
+      setSelectedPromotion(data.promotion)
+      form.setValue("promotionId", data.promotion.id.toString())
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error as AxiosError<ErrorResponse>
+        toast.error(
+          errorMessage?.response?.data.message || errorMessage.message
+        )
+      } else {
+        toast.error("Ada kesalahan")
+      }
+      console.log("Search Promo Error", error)
+    } finally {
+      setIsLoadingSearchPromo(false)
+    }
   }
 
   return (
@@ -294,7 +328,18 @@ function FormCheckout() {
                   ))}
                 </div>
 
-                <div className="border-t pt-4">
+                <div className="border-t pt-4 space-y-2">
+                  {selectedPromotion && (
+                    <div className="flex justify-between items-center font-medium">
+                      <span>Diskon</span>
+                      <span className="text-primary">
+                        Rp{" "}
+                        {selectedPromotion.discountValue.toLocaleString(
+                          "id-ID"
+                        )}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>Total</span>
                     <span className="text-primary">
@@ -331,13 +376,22 @@ function FormCheckout() {
               <CardHeader>
                 <CardTitle className="text-center">Kode Promo</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
                 <Input
                   type="text"
                   placeholder="Masukkan kode promo"
                   className="text-center"
-                  onChange={(e) => e.target.value.toUpperCase()}
+                  value={codePromo}
+                  onChange={(e) => setCodePromo(e.target.value.toUpperCase())}
                 />
+                <Button
+                  className="w-full"
+                  disabled={!codePromo || isLoadingSearchPromo}
+                  type="button"
+                  onClick={handleSearchPromo}
+                >
+                  {isLoadingSearchPromo ? <Spinner /> : "Cari Promo"}
+                </Button>
               </CardContent>
             </Card>
 
@@ -350,7 +404,6 @@ function FormCheckout() {
               disabled={isPending}
             >
               {isPending ? <Spinner /> : "Konfirmasi Pesanan"}
-              Konfirmasi Pesanan
             </Button>
 
             <div className="text-xs text-muted-foreground text-center">

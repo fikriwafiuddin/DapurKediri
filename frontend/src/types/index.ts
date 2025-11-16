@@ -44,6 +44,7 @@ export interface Order {
     | "completed"
     | "cancelled"
   notes: string
+  discountValue?: number
   orderItems?: OrderItems[]
   createdAt: Date
 }
